@@ -374,6 +374,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "\"$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts/include\"";
 				WRAPPER_EXTENSION = app;
 			};
@@ -395,6 +396,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "\"$(BUILD_ROOT)/../IntermediateBuildFilesPath/UninstalledProducts/include\"";
 				WRAPPER_EXTENSION = app;
 			};

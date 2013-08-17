@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archive type="com.apple.InterfaceBuilder3.CocoaTouch.iPad.XIB" version="7.10">
+<archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">800</int>
 		<string key="IBDocument.SystemVersion">11B26</string>
@@ -32,11 +32,11 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="IBProxyObject" id="841351856">
 				<string key="IBProxiedObjectIdentifier">IBFilesOwner</string>
-				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBProxyObject" id="606714003">
 				<string key="IBProxiedObjectIdentifier">IBFirstResponder</string>
-				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBUIWindow" id="62075450">
 				<reference key="NSNextResponder"/>
@@ -54,11 +54,11 @@
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics" id="456458906">
 					<int key="IBUIStatusBarStyle">2</int>
 				</object>
-				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<bool key="IBUIResizesToFullScreen">YES</bool>
 			</object>
 			<object class="IBUICustomObject" id="250404236">
-				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBUIViewController" id="578626022">
 				<string key="IBUINibName">Guess_The_IntroViewController</string>
@@ -67,7 +67,7 @@
 					<int key="IBUIInterfaceOrientation">1</int>
 					<int key="interfaceOrientation">1</int>
 				</object>
-				<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<bool key="IBUIHorizontal">NO</bool>
 			</object>
 		</object>
@@ -232,7 +232,7 @@
 			</object>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
-		<string key="IBDocument.TargetRuntimeIdentifier">IBIPadFramework</string>
+		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
 			<integer value="800" key="NS.object.0"/>
