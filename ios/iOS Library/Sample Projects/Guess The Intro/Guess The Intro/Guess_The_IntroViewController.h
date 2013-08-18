@@ -15,15 +15,9 @@
 	UILabel *currentYearLabel;
 	UIActivityIndicatorView *isLoadingView;
 	UIButton *track1Button;
-
-	NSUInteger loginAttempts;
-	NSNumberFormatter *formatter;
 	
 	SPPlaylist *playlist;
 	SPPlaybackManager *playbackManager;
-	
-	SPToplist *regionTopList;
-	SPToplist *userTopList;
     
 	SPTrack *firstSuggestion;
 	
@@ -36,16 +30,11 @@
 
 @property (nonatomic, readwrite, strong) SPPlaylist	*playlist;
 
-@property (nonatomic, strong, readwrite) SPToplist *regionTopList;
-@property (nonatomic, strong, readwrite) SPToplist *userTopList;
-
 @property (nonatomic, strong, readwrite) SPTrack *firstSuggestion;
 
 @property (nonatomic, readwrite) BOOL canPushOne;
 
 @property (nonatomic, readwrite) NSInteger year;
-//@property (nonatomic, readwrite, strong) NSMutableArray *trackPool;
-@property (nonatomic, readwrite, strong) NSMutableDictionary *playlistPool;
 
 @property (nonatomic, strong) IBOutlet UILabel *currentYearLabel;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *isLoadingView;

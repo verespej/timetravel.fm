@@ -10,17 +10,12 @@
 #import "SPArrayExtensions.h"
 #import <QuartzCore/QuartzCore.h>
 
-static NSUInteger const kLoadingTimeout = 10;
-static NSTimeInterval const kRoundDuration = 20.0;
-static NSTimeInterval const kGameDuration = 60 * 5; // 5 mins
-static NSTimeInterval const kGameCountdownThreshold = 30.0;
-
 @interface Guess_The_IntroViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *prevYearLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nextYearLabel;
 @property (nonatomic, readwrite, strong) NSMutableDictionary * availablePlaylists;
 @property int trackNumber;
-@property double lastDataArrivalTime;
+@property (nonatomic, readwrite, strong) NSDate *lastDataArrivalTime;
 @property bool attemptingBleConnection;
 @end
 
@@ -35,9 +30,6 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 
 @synthesize firstSuggestion;
 @synthesize canPushOne;
-
-@synthesize userTopList;
-@synthesize regionTopList;
 
 @synthesize year;
 
@@ -61,9 +53,6 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 	
 	self.track1Button.layer.borderColor = [UIColor darkGrayColor].CGColor;
 	self.track1Button.layer.borderWidth = 1.0;
-		
-	formatter = [[NSNumberFormatter alloc] init];
-	formatter.numberStyle = NSNumberFormatterDecimalStyle;
 			
 	[self addObserver:self forKeyPath:@"firstSuggestion.name" options:NSKeyValueObservingOptionInitial context:nil];
 	[self addObserver:self forKeyPath:@"firstSuggestion.artists" options:NSKeyValueObservingOptionInitial context:nil];
@@ -89,8 +78,7 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
     self.ble.delegate = self;
     
     self.attemptingBleConnection = false;
-    
-    [NSTimer scheduledTimerWithTimeInterval:(float)2.0 target:self selector:@selector(connectionMonitor:) userInfo:nil repeats:YES];
+    self.lastDataArrivalTime = [NSDate date];
 }
 
 - (void)viewDidUnload
@@ -98,19 +86,16 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
     [self setCurrentYearLabel:nil];
     [self setTrack1Button:nil];
 	[self setIsLoadingView:nil];
+    [self setNextYearLabel:nil];
+    [self setPrevYearLabel:nil];
 	
 	[self removeObserver:self forKeyPath:@"firstSuggestion.name"];
 	[self removeObserver:self forKeyPath:@"firstSuggestion.artists"];
 	[self removeObserver:self forKeyPath:@"firstSuggestion.album.cover.image"];
-		
 	[self removeObserver:self forKeyPath:@"canPushOne"];
-	
 	[self removeObserver:self forKeyPath:@"year"];
-	
-	formatter = nil;
+    [self removeObserver:self forKeyPath:@"currentTrack"];
 
-    [self setNextYearLabel:nil];
-    [self setPrevYearLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -141,17 +126,21 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 }
 
 -(void) connectionMonitor:(NSTimer *)timer {
-    double secondsSinceLastDataArrival = self.lastDataArrivalTime - CACurrentMediaTime();
+    double secondsSinceLastDataArrival = [self.lastDataArrivalTime timeIntervalSinceNow] * -1.0;
     if (!self.attemptingBleConnection) {
-        if (!self.ble.activePeripheral) {
+        if (!self.ble.activePeripheral || !self.ble.activePeripheral.isConnected) {
             // Not connected to a device, so try to connect to one
             if (self.ble.peripherals) {
                 self.ble.peripherals = nil;
             }
+            
+            // Give 10 seconds until data is expected to arrive
+            self.lastDataArrivalTime = [[NSDate date] dateByAddingTimeInterval:10];
+            
             self.attemptingBleConnection = true;
             [self.ble findBLEPeripherals:3];
             [NSTimer scheduledTimerWithTimeInterval:(float)2.0 target:self selector:@selector(bleConnectionTimer:) userInfo:nil repeats:NO];
-        } else if (secondsSinceLastDataArrival > 2) {
+        } else if (secondsSinceLastDataArrival > 4.0) {
             if (self.ble.activePeripheral.isConnected)
             {
                 [[self.ble CM] cancelPeripheralConnection:[ble activePeripheral]];
@@ -190,16 +179,31 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 -(void) bleDidReceiveData:(unsigned char *)data length:(int)length
 {
     //NSLog(@"Received data of length %d", length);
-    self.lastDataArrivalTime = CACurrentMediaTime();
+    self.lastDataArrivalTime = [NSDate date];
     
-    for (int i = 0; i < length; i+=3)
+    for (int i = 0; i < length; i+=5)
     {
         if (data[i] == 0x0A) {
             int low = (int)data[i+1];
             int high = (int)data[i+2];
-            int val = (high << 8) + low;
+            int val1 = (high << 8) + low;
             
-            NSLog(@"Received 0x%02X, 0x%02X: %d", high, low, val);
+            low = (int)data[i+3];
+            high = (int)data[i+4];
+            int val2 = (high << 8) + low;
+            
+            NSLog(@"Received %d, %d", val1, val2);
+            
+            int temp = self.year;
+            double range = (double)(2013 - 1950);
+            double percent = (double)val1 / 1023.0;
+            self.year = 1950 + (int)(range * percent);
+            if (temp != self.year) {
+                NSLog(@"Adjusting to year %d", self.year);
+                [self startNewYear];
+            }
+        } else if (data[i] == 0x0B) {
+            NSLog(@"Received keep-alive");
         }
     }
 }
@@ -211,11 +215,7 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 	
 	[self dismissModalViewControllerAnimated:YES];
 
-	self.isLoadingView.hidden = YES;//!self.roundProgressIndicator.hidden;
-	
-	self.regionTopList = [SPToplist toplistForLocale:[SPSession sharedSession].locale
-										   inSession:[SPSession sharedSession]];
-	self.userTopList = [SPToplist toplistForCurrentUserInSession:[SPSession sharedSession]];
+	self.isLoadingView.hidden = YES;
 
     self.year = 2013;
 	
@@ -228,6 +228,9 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 -(void)sessionDidLoginSuccessfully:(SPSession *)aSession; {
 	// Invoked by SPSession after a successful login.
     NSLog(@"Logged in");
+    
+    // Start the BLE connection
+    [NSTimer scheduledTimerWithTimeInterval:(float)2.0 target:self selector:@selector(connectionMonitor:) userInfo:nil repeats:YES];
 }
 
 -(void)session:(SPSession *)aSession didFailToLoginWithError:(NSError *)error; {
@@ -298,8 +301,6 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 			NSLog(@"[%@ %@]: %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), @"Container loaded.");
 			
 			NSMutableArray *playlists = [NSMutableArray array];
-			//[playlists addObject:[SPSession sharedSession].starredPlaylist];
-			//[playlists addObject:[SPSession sharedSession].inboxPlaylist];
 			[playlists addObjectsFromArray:[SPSession sharedSession].userPlaylists.flattenedPlaylists];
 			
 			[SPAsyncLoading waitUntilLoaded:playlists timeout:kSPAsyncLoadingDefaultTimeout then:^(NSArray *loadedPlaylists, NSArray *notLoadedPlaylists) {
