@@ -25,49 +25,78 @@
 <header>
     <nav class="navbar navbar-fixed-top">
         <div class="navbar-inner">
-            <a class="brand" href="#">Title</a>
-            <ul class="nav">
-                <li class="active"><a href="#What">What</a></li>
+            <a class="brand" href="#Home"></a>
+            <ul class="nav right">
                 <li><a href="#Why">Why</a></li>
+                <li><a href="#What">What</a></li>
+
                 <li><a href="#How">How</a></li>
+
                 <li><a href="#Order">Order</a></li>
             </ul>
         </div>
     </nav>
 </header>
-<div class="page" id="What">
-    <div class="container-fluid">
-        <div class="hero-unit">
-            <h1>Travel Back in Time</h1>
+<div class="page" id="Home">
+    <div class="row-fluid image-with-caption">
+        <div class="offset1 span4">
+            <h1>Time Travel FM</h1>
 
-            <p>This radio's tuner dials back in time, so you can listen to the greatest hits of that year</p>
+            <p>Designed with elements from periods of the 20th century bridging current technology with the past.
+                Travel in time with your radio; dial back to relive moments of a chosen year.</p>
+        </div>
+        <div class="span6 storyImage">
+        </div>
 
-            <p><i>Coming Soon: Dial into the Future!!</i></p>
+    </div>
+</div>
+
+<div class="page" id="Why">
+    <div class="row-fluid">
+        <div class="offset1 span6">
+            <h2>IMAGE GOES HERE</h2>
+        </div>
+        <div class="span4">
+            <h2>Why?</h2>
+
+            <p>Music is the language of emotion! Time travel FM taps into nostalgia. Feel the past with an old song.
+                Experience a period through the voice and language of vintage commercials.</p>
         </div>
     </div>
-</div>
-<div class="page" id="Why">
-    <div class="container-fluid">
-        <h2>Why?</h2>
-        <ul>
-            <li>It looks cool!</li>
-            <li>It sounds cool!</li>
-            <li>It smells cool? (Feature is in beta)</li>
-        </ul>
 
+</div>
+<div class="page" id="What">
+    <div class="row-fluid">
+        <div class="offset1 span2">
+           <h4>Dial back into Time</h4>
+            <p>Select a year</p>
+            <h4>Dial back into Time</h4>
+            <p>Select a year</p>
+        </div>
+        <div class="span6">
+            <h2>Image goes here</h2>
+        </div>
+        <div class="span2">
+            <h4>Dial back into Time</h4>
+            <p>Select a year</p>
+            <h4>Dial back into Time</h4>
+            <p>Select a year</p>
+        </div>
     </div>
 
-</div>
-<div class="page" id="How">
-    <div class="container-fluid">
-        <h2>How?</h2>
 
-        <p>How'd we do it?! We took a flux capicator and stuck it to an antenna. Because it only has to pick up radio
+</div>
+
+<div class="page" id="How">
+    <div class="background-video transparent"></div>
+    <div class="hero-unit">
+        <h2>How did we do it?</h2>
+
+        <p> We took a flux capicator and stuck it to an antenna. Because it only has to pick up radio
             waves, it doesn't need
             1.8 gigawatts of electricity, or need to travel at 88 mph. Its both green and safe for the whole
             family! </p>
     </div>
-
 </div>
 <div class="page" id="Order">
     <div class="container-fluid">
@@ -105,7 +134,9 @@
 
 <!-- build:js scripts/main.js -->
 <script src="bower_components/jquery/jquery.js"></script>
+<script src="bower_components/underscore/underscore.js"></script>
 <script src="bower_components/jquery.scrollTo/jquery.scrollTo.js"></script>
+<script src="scripts/vendor/jquery.videoBG.js"></script>
 <script src="scripts/vendor/jquery.nav.js"></script>
 
 <script src="scripts/main.js"></script>
