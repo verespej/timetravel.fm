@@ -28,8 +28,6 @@
 
 @property (nonatomic, readwrite, strong) SPPlaybackManager *playbackManager;
 
-@property (nonatomic, readwrite, strong) SPPlaylist	*playlist;
-
 @property (nonatomic, strong, readwrite) SPTrack *firstSuggestion;
 
 @property (nonatomic, readwrite) BOOL canPushOne;

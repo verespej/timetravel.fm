@@ -26,7 +26,6 @@
 @synthesize track1Button;
 
 @synthesize playbackManager;
-@synthesize playlist;
 
 @synthesize firstSuggestion;
 @synthesize canPushOne;
@@ -72,6 +71,10 @@
     UITapGestureRecognizer* gestureNext = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moveNextYear:)];
     [[self nextYearLabel] setUserInteractionEnabled:YES];
     [[self nextYearLabel] addGestureRecognizer:gestureNext];
+    
+    UITapGestureRecognizer* gestureTogglePlay = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(togglePlay:)];
+    [[self currentYearLabel] setUserInteractionEnabled:YES];
+    [[self currentYearLabel] addGestureRecognizer:gestureTogglePlay];
     
     self.ble = [[BLE alloc] init];
     [self.ble controlSetup:1];
@@ -202,6 +205,10 @@
                 NSLog(@"Adjusting to year %d", self.year);
                 [self startNewYear];
             }
+            
+            int volume = (double)val2 / 1023.0;
+            [self.playbackManager setVolume:volume];
+            
         } else if (data[i] == 0x0B) {
             NSLog(@"Received keep-alive");
         }
@@ -215,7 +222,8 @@
 	
 	[self dismissModalViewControllerAnimated:YES];
 
-	self.isLoadingView.hidden = YES;
+	self.isLoadingView.hidden = NO;
+    [self.isLoadingView startAnimating];
 
     self.year = 2013;
 	
@@ -257,7 +265,7 @@
 }
 
 #pragma mark -
-#pragma mark Game UI Actions
+#pragma mark UI Actions
 
 - (IBAction)moveNextYear:(id)sender {
     NSInteger temp = self.year;
@@ -285,11 +293,27 @@
     [self startNewYear];
 }
 
+-(IBAction) togglePlay:(id)sender {
+    if (!self.playbackManager.currentTrack) {
+        [self startNewYear];
+    } else {
+        self.playbackManager.isPlaying = !self.playbackManager.isPlaying;
+    }
+}
+
+- (IBAction)changeVolumeSlider:(UISlider *)sender {
+    [self.playbackManager setVolume:[sender value]];
+}
+
 #pragma mark -
 #pragma mark Finding Tracks
 
 -(void)waitAndFillTrackPool {
-	
+	if (self.isLoadingView.isHidden) {
+        self.isLoadingView.hidden = NO;
+        [self.isLoadingView startAnimating];
+    }
+    
 	[SPAsyncLoading waitUntilLoaded:[SPSession sharedSession] timeout:kSPAsyncLoadingDefaultTimeout then:^(NSArray *loadedession, NSArray *notLoadedSession) {
 		
 		// The session is logged in and loaded — now wait for the userPlaylists to load.
@@ -331,8 +355,11 @@
                         }
 					}*/
 					
-					[self startNewYear];
-					
+                    
+					//[self startNewYear];
+                    
+                    [self.isLoadingView stopAnimating];
+					self.isLoadingView.hidden = YES;
 				}];
 			}];
 		}];
@@ -372,12 +399,11 @@
 #pragma mark Game Logic
 
 -(void)startNewYear {
-	
-	if (self.playbackManager.currentTrack != nil) {
-		[self.playlist addItem:self.playbackManager.currentTrack atIndex:self.playlist.items.count callback:^(NSError *error) {
-			if (error) NSLog(@"%@", error);
-		}];
-	}
+
+    if (self.availablePlaylists.count < 1) {
+        NSLog(@"Tried to play before ready");
+        return;
+    }
 	
 	// Starting a new year means resetting, selecting tracks then starting the timer again 
 	// when the audio starts playing.
@@ -387,8 +413,6 @@
     }
     
 	self.firstSuggestion = nil;
-	
-	self.isLoadingView.hidden = YES;
     
     NSString *yearAsString = [NSString stringWithFormat:@"%d", self.year];
 
@@ -442,8 +466,6 @@
 }
 
 -(void)playbackManagerWillStartPlayingAudio:(SPPlaybackManager *)aPlaybackManager {
-
-	self.isLoadingView.hidden = YES;	
 	self.canPushOne = YES;	
 }
 
