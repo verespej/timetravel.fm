@@ -16,9 +16,12 @@ static NSTimeInterval const kGameDuration = 60 * 5; // 5 mins
 static NSTimeInterval const kGameCountdownThreshold = 30.0;
 
 @interface Guess_The_IntroViewController ()
--(NSString *)stringFromScore:(NSInteger)aScore;
 @property (weak, nonatomic) IBOutlet UILabel *prevYearLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nextYearLabel;
+@property (nonatomic, readwrite, strong) NSMutableDictionary * availablePlaylists;
+@property int trackNumber;
+@property double lastDataArrivalTime;
+@property bool attemptingBleConnection;
 @end
 
 @implementation Guess_The_IntroViewController
@@ -37,7 +40,8 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 @synthesize regionTopList;
 
 @synthesize year;
-@synthesize trackPool;
+
+@synthesize ble;
 
 - (void)didReceiveMemoryWarning
 {
@@ -45,10 +49,6 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
     [super didReceiveMemoryWarning];
     
     // Release any cached data, images, etc that aren't in use.
-}
-
--(NSString *)stringFromScore:(NSInteger)aScore {
-	return [formatter stringFromNumber:[NSNumber numberWithInteger:aScore]];
 }
 
 #pragma mark - View lifecycle
@@ -73,13 +73,24 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 	
 	[self addObserver:self forKeyPath:@"year" options:NSKeyValueObservingOptionInitial context:nil];
     
+    [self.playbackManager addObserver:self forKeyPath:@"currentTrack" options:NSKeyValueObservingOptionNew context:NULL];
+    self.trackNumber = 0;
+    
     UITapGestureRecognizer* gesturePrev = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(movePrevYear:)];
-    [[self nextYearLabel] setUserInteractionEnabled:YES];
-    [[self nextYearLabel] addGestureRecognizer:gesturePrev];
+    [[self prevYearLabel] setUserInteractionEnabled:YES];
+    [[self prevYearLabel] addGestureRecognizer:gesturePrev];
     
     UITapGestureRecognizer* gestureNext = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moveNextYear:)];
     [[self nextYearLabel] setUserInteractionEnabled:YES];
     [[self nextYearLabel] addGestureRecognizer:gestureNext];
+    
+    self.ble = [[BLE alloc] init];
+    [self.ble controlSetup:1];
+    self.ble.delegate = self;
+    
+    self.attemptingBleConnection = false;
+    
+    [NSTimer scheduledTimerWithTimeInterval:(float)2.0 target:self selector:@selector(connectionMonitor:) userInfo:nil repeats:YES];
 }
 
 - (void)viewDidUnload
@@ -119,8 +130,77 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 		self.track1Button.enabled = self.canPushOne;
     } else if ([keyPath isEqualToString:@"year"]) {
         NSLog(@"Year: %@", keyPath);
+    } else if ([keyPath isEqualToString:@"currentTrack"]) {
+        SPPlaybackManager *sppm = (SPPlaybackManager *)object;
+        if (!sppm.currentTrack) {
+            [self startNewYear];
+        }
 	} else {
         [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
+-(void) connectionMonitor:(NSTimer *)timer {
+    double secondsSinceLastDataArrival = self.lastDataArrivalTime - CACurrentMediaTime();
+    if (!self.attemptingBleConnection) {
+        if (!self.ble.activePeripheral) {
+            // Not connected to a device, so try to connect to one
+            if (self.ble.peripherals) {
+                self.ble.peripherals = nil;
+            }
+            self.attemptingBleConnection = true;
+            [self.ble findBLEPeripherals:3];
+            [NSTimer scheduledTimerWithTimeInterval:(float)2.0 target:self selector:@selector(bleConnectionTimer:) userInfo:nil repeats:NO];
+        } else if (secondsSinceLastDataArrival > 2) {
+            if (self.ble.activePeripheral.isConnected)
+            {
+                [[self.ble CM] cancelPeripheralConnection:[ble activePeripheral]];
+            }
+        }
+    }
+}
+
+-(void) bleConnectionTimer:(NSTimer *)timer
+{
+    if (self.ble.peripherals.count > 0)
+    {
+        // Connect to first peripheral found
+        // TODO: Identify device
+        [self.ble connectPeripheral:[ble.peripherals objectAtIndex:0]];
+    }
+    
+    self.attemptingBleConnection = false;
+}
+
+
+#pragma mark - BLE delegate
+
+- (void)bleDidDisconnect {
+    NSLog(@"Disconnected");
+}
+
+-(void) bleDidUpdateRSSI:(NSNumber *) rssi {
+}
+
+-(void) bleDidConnect {
+    NSLog(@"Connected");
+}
+
+// When data is comming, this will be called
+-(void) bleDidReceiveData:(unsigned char *)data length:(int)length
+{
+    //NSLog(@"Received data of length %d", length);
+    self.lastDataArrivalTime = CACurrentMediaTime();
+    
+    for (int i = 0; i < length; i+=3)
+    {
+        if (data[i] == 0x0A) {
+            int low = (int)data[i+1];
+            int high = (int)data[i+2];
+            int val = (high << 8) + low;
+            
+            NSLog(@"Received 0x%02X, 0x%02X: %d", high, low, val);
+        }
     }
 }
 
@@ -136,9 +216,8 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 	self.regionTopList = [SPToplist toplistForLocale:[SPSession sharedSession].locale
 										   inSession:[SPSession sharedSession]];
 	self.userTopList = [SPToplist toplistForCurrentUserInSession:[SPSession sharedSession]];
-	
-	//if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CreatePlaylist"])
-	//	self.playlist = [[[SPSession sharedSession] userPlaylists] createPlaylistWithName:self.playlistNameField.stringValue];
+
+    self.year = 2013;
 	
 	[self waitAndFillTrackPool];
 }
@@ -148,6 +227,7 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 
 -(void)sessionDidLoginSuccessfully:(SPSession *)aSession; {
 	// Invoked by SPSession after a successful login.
+    NSLog(@"Logged in");
 }
 
 -(void)session:(SPSession *)aSession didFailToLoginWithError:(NSError *)error; {
@@ -176,17 +256,27 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 #pragma mark -
 #pragma mark Game UI Actions
 
-- (IBAction)moveNextYear:(id)sender {	
-    if (year < 2013) {
+- (IBAction)moveNextYear:(id)sender {
+    NSInteger temp = self.year;
+    self.year++;
+    while (self.year <= 2013 && ![self.availablePlaylists objectForKey:[NSString stringWithFormat:@"%d", self.year]] ) {
         self.year++;
+    }
+    if (self.year > 2013) {
+        self.year = temp;
     }
 	self.canPushOne = NO;
     [self startNewYear];
 }
 
 - (IBAction)movePrevYear:(id)sender {
-	if (1950 < year) {
+    NSInteger temp = self.year;
+    self.year--;
+    while (self.year >= 1950 && ![self.availablePlaylists objectForKey:[NSString stringWithFormat:@"%d", self.year]] ) {
         self.year--;
+    }
+    if (self.year < 1950) {
+        self.year = temp;
     }
 	self.canPushOne = NO;
     [self startNewYear];
@@ -208,8 +298,8 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 			NSLog(@"[%@ %@]: %@", NSStringFromClass([self class]), NSStringFromSelector(_cmd), @"Container loaded.");
 			
 			NSMutableArray *playlists = [NSMutableArray array];
-			[playlists addObject:[SPSession sharedSession].starredPlaylist];
-			[playlists addObject:[SPSession sharedSession].inboxPlaylist];
+			//[playlists addObject:[SPSession sharedSession].starredPlaylist];
+			//[playlists addObject:[SPSession sharedSession].inboxPlaylist];
 			[playlists addObjectsFromArray:[SPSession sharedSession].userPlaylists.flattenedPlaylists];
 			
 			[SPAsyncLoading waitUntilLoaded:playlists timeout:kSPAsyncLoadingDefaultTimeout then:^(NSArray *loadedPlaylists, NSArray *notLoadedPlaylists) {
@@ -217,6 +307,14 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 				// All of our playlists have loaded their metadata — wait for all tracks to load their metadata.
 				NSLog(@"[%@ %@]: %@ of %@ playlists loaded.", NSStringFromClass([self class]), NSStringFromSelector(_cmd), 
 					  [NSNumber numberWithInteger:loadedPlaylists.count], [NSNumber numberWithInteger:loadedPlaylists.count + notLoadedPlaylists.count]);
+                
+                if (!self.availablePlaylists) {
+                    self.availablePlaylists = [[NSMutableDictionary alloc] init];
+                }
+                
+                for (SPPlaylist *playlistEntry in loadedPlaylists) {
+                    [self.availablePlaylists setObject:playlistEntry forKey:playlistEntry.name];
+                }
 				
 				NSArray *playlistItems = [loadedPlaylists valueForKeyPath:@"@unionOfArrays.items"];
 				NSArray *tracks = [self tracksFromPlaylistItems:playlistItems];
@@ -227,15 +325,10 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 					NSLog(@"[%@ %@]: %@ of %@ tracks loaded.", NSStringFromClass([self class]), NSStringFromSelector(_cmd), 
 						  [NSNumber numberWithInteger:loadedTracks.count], [NSNumber numberWithInteger:loadedTracks.count + notLoadedTracks.count]);
 					
-					NSMutableArray *theTrackPool = [NSMutableArray arrayWithCapacity:loadedTracks.count];
-					
-					for (SPTrack *aTrack in loadedTracks) {
-						if (aTrack.availability == SP_TRACK_AVAILABILITY_AVAILABLE && [aTrack.name length] > 0)
-							[theTrackPool addObject:aTrack];
-					}
-					
-					self.trackPool = [NSMutableArray arrayWithArray:[[NSSet setWithArray:theTrackPool] allObjects]];
-					// ^ Thin out duplicates.
+					/*for (SPTrack *aTrack in loadedTracks) {
+						if (aTrack.availability == SP_TRACK_AVAILABILITY_AVAILABLE && [aTrack.name length] > 0) {
+                        }
+					}*/
 					
 					[self startNewYear];
 					
@@ -288,29 +381,42 @@ static NSTimeInterval const kGameCountdownThreshold = 30.0;
 	// Starting a new year means resetting, selecting tracks then starting the timer again 
 	// when the audio starts playing.
 	
-	self.playbackManager.isPlaying = NO;
+    if (self.playbackManager.isPlaying) {
+        self.playbackManager.isPlaying = NO;
+    }
+    
 	self.firstSuggestion = nil;
 	
 	self.isLoadingView.hidden = YES;
-
-	SPTrack *theOne = [self.trackPool randomObject];
     
-	if (theOne != nil) {
-		
-		NSMutableArray *array = [NSMutableArray arrayWithObjects:theOne, nil];
-		self.firstSuggestion = [array randomObject];
-		//[array removeObject:self.firstSuggestion];
-		
-		//Disable buttons until playback starts
-		self.canPushOne = NO;
-		
-		[self startPlaybackOfTrack:theOne];
-		
-	}
+    NSString *yearAsString = [NSString stringWithFormat:@"%d", self.year];
+
+    SPPlaylist *pl = (SPPlaylist *)[self.availablePlaylists objectForKey:yearAsString];
+    if (!pl) {
+        NSString *key = [[self.availablePlaylists keyEnumerator] nextObject];
+        
+        self.year = [key integerValue];
+        yearAsString = [NSString stringWithFormat:@"%d", self.year];
+        
+        pl = (SPPlaylist *)[self.availablePlaylists objectForKey:yearAsString];
+    }
+    [[self currentYearLabel] setText:yearAsString];
+    
+    NSArray *tracks = [self tracksFromPlaylistItems:pl.items];
+    self.trackNumber = (self.trackNumber + 1) % tracks.count;
+    SPTrack *theOne = [self tracksFromPlaylistItems:pl.items][self.trackNumber];
+    
+    // TODO: Handle advancing playlist on song finish
+    
+    self.firstSuggestion = theOne;
+    
+    //Disable buttons until playback starts
+    self.canPushOne = NO;
+    
+    [self startPlaybackOfTrack:theOne];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	//self.year = 2013;
 	[self waitAndFillTrackPool];
 }
 

@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "CocoaLibSpotify.h"
 #import "SPPlaybackManager.h"
+#import "BLE.h"
 
-@interface Guess_The_IntroViewController : UIViewController <SPSessionDelegate, SPPlaybackManagerDelegate, SPLoginViewControllerDelegate> {
+@interface Guess_The_IntroViewController : UIViewController <SPSessionDelegate, SPPlaybackManagerDelegate, SPLoginViewControllerDelegate, BLEDelegate> {
 	UILabel *currentYearLabel;
 	UIActivityIndicatorView *isLoadingView;
 	UIButton *track1Button;
@@ -23,13 +24,12 @@
 	
 	SPToplist *regionTopList;
 	SPToplist *userTopList;
-	
-	NSMutableArray *trackPool;
+    
 	SPTrack *firstSuggestion;
 	
 	BOOL canPushOne;
     
-	NSUInteger year; // The current score
+	NSInteger year;
 }
 
 @property (nonatomic, readwrite, strong) SPPlaybackManager *playbackManager;
@@ -43,15 +43,16 @@
 
 @property (nonatomic, readwrite) BOOL canPushOne;
 
-@property (nonatomic, readwrite) NSUInteger year;
-@property (nonatomic, readwrite, strong) NSMutableArray *trackPool;
+@property (nonatomic, readwrite) NSInteger year;
+//@property (nonatomic, readwrite, strong) NSMutableArray *trackPool;
+@property (nonatomic, readwrite, strong) NSMutableDictionary *playlistPool;
 
 @property (nonatomic, strong) IBOutlet UILabel *currentYearLabel;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *isLoadingView;
 
 @property (nonatomic, strong) IBOutlet UIButton *track1Button;
 
-- (IBAction)guessOne:(id)sender;
+@property (nonatomic, strong) BLE *ble;
 
 // Getting tracks 
 

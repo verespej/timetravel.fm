@@ -26,6 +26,10 @@
 		50A0D86B143B016700458686 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50A0D86A143B016700458686 /* AVFoundation.framework */; };
 		50A0D86D143B016B00458686 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50A0D86C143B016B00458686 /* CoreAudio.framework */; };
 		50A0D86F143B017400458686 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50A0D86E143B017400458686 /* AudioToolbox.framework */; };
+		F8BBC8D017C0345500F1EAB8 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F8BBC8CF17C0345500F1EAB8 /* Default-568h@2x.png */; };
+		F8BBC8D217C0980400F1EAB8 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8BBC8D117C0980400F1EAB8 /* CoreBluetooth.framework */; };
+		F8BBC8D717C0990C00F1EAB8 /* BLE.m in Sources */ = {isa = PBXBuildFile; fileRef = F8BBC8D517C0988B00F1EAB8 /* BLE.m */; };
+		F8BBC8D917C0A04D00F1EAB8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8BBC8D817C0A04D00F1EAB8 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +82,12 @@
 		50A0D86A143B016700458686 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		50A0D86C143B016B00458686 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		50A0D86E143B017400458686 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		F8BBC8CF17C0345500F1EAB8 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		F8BBC8D117C0980400F1EAB8 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		F8BBC8D417C0988B00F1EAB8 /* BLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLE.h; sourceTree = "<group>"; };
+		F8BBC8D517C0988B00F1EAB8 /* BLE.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLE.m; sourceTree = "<group>"; };
+		F8BBC8D617C0988B00F1EAB8 /* BLEDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BLEDefines.h; sourceTree = "<group>"; };
+		F8BBC8D817C0A04D00F1EAB8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +95,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8BBC8D917C0A04D00F1EAB8 /* QuartzCore.framework in Frameworks */,
+				F8BBC8D217C0980400F1EAB8 /* CoreBluetooth.framework in Frameworks */,
 				37E8E0A417463241000A9747 /* Security.framework in Frameworks */,
 				50A0D86F143B017400458686 /* AudioToolbox.framework in Frameworks */,
 				50A0D86D143B016B00458686 /* CoreAudio.framework in Frameworks */,
@@ -114,6 +126,8 @@
 		50A0D819143AF62100458686 = {
 			isa = PBXGroup;
 			children = (
+				F8BBC8D817C0A04D00F1EAB8 /* QuartzCore.framework */,
+				F8BBC8CF17C0345500F1EAB8 /* Default-568h@2x.png */,
 				50A0D858143AFF2100458686 /* CocoaLibSpotify iOS Library.xcodeproj */,
 				50A0D82E143AF62100458686 /* Guess The Intro */,
 				50A0D827143AF62100458686 /* Frameworks */,
@@ -132,6 +146,8 @@
 		50A0D827143AF62100458686 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F8BBC8D317C0988B00F1EAB8 /* BLE_Framework */,
+				F8BBC8D117C0980400F1EAB8 /* CoreBluetooth.framework */,
 				37E8E0A317463241000A9747 /* Security.framework */,
 				50A0D86E143B017400458686 /* AudioToolbox.framework */,
 				50A0D86C143B016B00458686 /* CoreAudio.framework */,
@@ -180,6 +196,17 @@
 				50544BDC1599D8F700320CEA /* CocoaLSTests.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F8BBC8D317C0988B00F1EAB8 /* BLE_Framework */ = {
+			isa = PBXGroup;
+			children = (
+				F8BBC8D417C0988B00F1EAB8 /* BLE.h */,
+				F8BBC8D517C0988B00F1EAB8 /* BLE.m */,
+				F8BBC8D617C0988B00F1EAB8 /* BLEDefines.h */,
+			);
+			name = BLE_Framework;
+			path = ../../../../../../tools/iOS/BLE_Framework;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -260,6 +287,7 @@
 				50A0D83C143AF62100458686 /* MainWindow.xib in Resources */,
 				50A0D842143AF62100458686 /* Guess_The_IntroViewController.xib in Resources */,
 				5073D8C81520C5DC0058AA4F /* SPLoginResources.bundle in Resources */,
+				F8BBC8D017C0345500F1EAB8 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +298,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8BBC8D717C0990C00F1EAB8 /* BLE.m in Sources */,
 				50A0D835143AF62100458686 /* main.m in Sources */,
 				50A0D839143AF62100458686 /* Guess_The_IntroAppDelegate.m in Sources */,
 				50A0D83F143AF62100458686 /* Guess_The_IntroViewController.m in Sources */,
