@@ -50,7 +50,7 @@ $(document).ready(function () {
     var videoPagePosition = $("#How").position().top;
 
     var videoBackgroundAction = new scrollAction({
-        startPosition: videoPagePosition - 2*($(".page").height())/3,
+        startPosition: videoPagePosition - 2.2*($(".page").height())/3,
         endPosition: videoPagePosition + ($(".page").height()) * 0.75,
         onZoneExit: function () {
             $("#How .background-video").addClass("transparent");
@@ -62,9 +62,25 @@ $(document).ready(function () {
 
     });
 
+    var imagePagePosition = $("#Why").position().top;
+
+    var imageBackgroundPosition = new scrollAction({
+        startPosition: imagePagePosition - 2.2*($(".page").height())/3,
+        endPosition: imagePagePosition + ($(".page").height()) * 0.75,
+        onZoneExit: function () {
+            $("#Why .image-background").addClass("transparent");
+        },
+        onZoneEnter: function () {
+            console.log("you entered!");
+            $("#Why .image-background").removeClass("transparent");
+        }
+
+    });
+
     var revalidateZones = _.debounce(function () {
         var currentPosition = $(window).scrollTop();
         videoBackgroundAction.checkPosition(currentPosition);
+        imageBackgroundPosition.checkPosition(currentPosition);
     }, 30);
 
     $(window).scroll(function (scrollEvent) {
