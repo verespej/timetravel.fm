@@ -116,13 +116,12 @@ nav a:visited {
 }
 
 .bottom-border {
-    width: 101%;
+    width: 100%;
     height: 15vh;
     position: absolute;
     background-color: rgb(50, 50, 50);
     padding: 0px;
     bottom: 0px;
-    margin-left: -6%;
 }
 
 .Page2 {
@@ -208,7 +207,6 @@ nav a:visited {
 
 .Page4 {
     height: 100vh;
-    padding: 5%;
     position: relative;
 
 }
@@ -230,6 +228,7 @@ nav a:visited {
 }
 
 .Page4 h2 {
+    margin-left: 5%;
     width: 35%;
     margin-top: 18%;
     display: inline-block;
@@ -237,9 +236,14 @@ nav a:visited {
 }
 
 .Page4 .text {
+    margin-left: 5%;
     width: 35%;
     display: inline-block;
     text-align: justify;
+}
+
+.Page4 img {
+    margin-right: 5%;
 }
 
 .Page5 {
