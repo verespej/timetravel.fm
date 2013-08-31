@@ -210,6 +210,22 @@ nav a:visited {
 
 }
 
+#Page4Text {
+    background-color: rgba(234, 234, 233, 0.9);
+    width: 30%;
+    padding: 20px;
+    top: 60px;
+    margin-left: 5%;
+    position: relative;
+    z-index: 2;
+    margin-top: 5%;
+    float: left;
+}
+
+#Page4Text h2 {
+    text-align: left;
+}
+
 .Page4 .video-background {
     position: absolute;
     width: 100%;
@@ -224,21 +240,6 @@ nav a:visited {
     -webkit-transition-property: opacity;
     -webkit-transition-duration: .6s;
     -webkit-transition-timing-function: linear;
-}
-
-.Page4 h2 {
-    margin-left: 5%;
-    width: 35%;
-    margin-top: 18%;
-    display: inline-block;
-    font-size: 1.5em;
-}
-
-.Page4 .text {
-    margin-left: 5%;
-    width: 35%;
-    display: inline-block;
-    text-align: justify;
 }
 
 .Page4 img {
