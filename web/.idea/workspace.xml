@@ -7,9 +7,9 @@
     </list>
     <ignored path="web.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="0010c1a2-f0e0-45cd-923e-624a4e1a0837" time="1377926188074" ignored="false" />
+    <file path="/Dummy.txt" changelist="0010c1a2-f0e0-45cd-923e-624a4e1a0837" time="1377926572787" ignored="false" />
     <file path="/index.html" changelist="0010c1a2-f0e0-45cd-923e-624a4e1a0837" time="1377925440092" ignored="false" />
-    <file path="/main.css" changelist="0010c1a2-f0e0-45cd-923e-624a4e1a0837" time="1377926337428" ignored="false" />
+    <file path="/main.css" changelist="0010c1a2-f0e0-45cd-923e-624a4e1a0837" time="1377926663394" ignored="false" />
     <file path="/main.js" changelist="0010c1a2-f0e0-45cd-923e-624a4e1a0837" time="1377925987582" ignored="false" />
     <file path="/main.scss" changelist="0010c1a2-f0e0-45cd-923e-624a4e1a0837" time="1376872636521" ignored="false" />
     <file path="/.gitignore" changelist="0010c1a2-f0e0-45cd-923e-624a4e1a0837" time="1376770382381" ignored="false" />
@@ -53,7 +53,7 @@
       <file leaf-file-name="main.css" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/styles/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="118" column="14" selection-start="1857" selection-end="1857" vertical-scroll-proportion="0.40381557">
+            <state line="97" column="21" selection-start="1558" selection-end="1558" vertical-scroll-proportion="0.52671754">
               <folding />
             </state>
           </provider>
@@ -128,7 +128,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -217,6 +216,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -224,8 +224,8 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="last_opened_file_path" value="$USER_HOME$/WebstormProjects/sampleApp" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -414,11 +414,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/TimeTravelFM.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="9" selection-start="681" selection-end="681" vertical-scroll-proportion="8.083333">
-          <folding>
-            <element signature="n#style#0;n#link#0;n#head#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
+        <state line="17" column="9" selection-start="681" selection-end="681" vertical-scroll-proportion="8.083333" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
@@ -459,7 +455,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/styles/main.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="118" column="14" selection-start="1857" selection-end="1857" vertical-scroll-proportion="0.40381557">
+        <state line="97" column="21" selection-start="1558" selection-end="1558" vertical-scroll-proportion="0.52671754">
           <folding />
         </state>
       </provider>
