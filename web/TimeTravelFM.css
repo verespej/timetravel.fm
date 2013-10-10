@@ -1,12 +1,11 @@
 body {
     background-color: #F8EAD6;
     font-family: "Old Standard TT", serif;
-    height: 100%;
-    width: 100%;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;         /* Opera/IE 8+ */
     margin:0px;
+    overflow-x: hidden;
 }
 h2, h1, h3, h4 {
  color: #71634E;
@@ -29,7 +28,6 @@ nav {
     z-index: 10;
     padding: 0px;
     margin: 0px;
-    margin-left: -10px;
     background-color: #BEA682;
 }
 nav img {
