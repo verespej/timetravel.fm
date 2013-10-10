@@ -6,7 +6,7 @@ $(document).ready(function () {
         scrollSpeed: 300
     });
 
-    var videoBG = $('#Page4 .video-background').videoBG({
+    var videoBG = $('.Page4 .video-background').videoBG({
         mp4: "video/starfield.mp4",
         ogv: "video/starfield.ogv",
         webm: "video/starfield.webm",
@@ -47,33 +47,33 @@ $(document).ready(function () {
         };
     };
 
-    var videoPagePosition = $("#Page4").position().top;
+    var videoPagePosition = $(".Page4").position().top;
 
     var videoBackgroundAction = new scrollAction({
-        startPosition: videoPagePosition - 2*($("#Page4").height())/3,
-        endPosition: videoPagePosition + ($("#Page4").height()) * 0.75,
+        startPosition: videoPagePosition - 2*($(".Page4").height())/3,
+        endPosition: videoPagePosition + ($(".Page4").height()) * 0.75,
         onZoneExit: function () {
             console.log("you exited!");
-            $("#Page4 .video-background").addClass("transparent");
+            $(".Page4 .video-background").addClass("transparent");
         },
         onZoneEnter: function () {
             console.log("you entered!");
-            $("#Page4 .video-background").removeClass("transparent");
+            $(".Page4 .video-background").removeClass("transparent");
         }
 
     });
 
-    var imagePagePosition = $("#Page2").position().top;
+    var imagePagePosition = $(".Page2").position().top;
 
     var imageBackgroundPosition = new scrollAction({
-        startPosition: imagePagePosition - 2.2*($("#Page2").height())/3,
-        endPosition: imagePagePosition + ($("#Page2").height()) * 0.6,
+        startPosition: imagePagePosition - 2.2*($(".Page2").height())/3,
+        endPosition: imagePagePosition + ($(".Page2").height()) * 0.6,
         onZoneExit: function () {
-            $("#Page2 .image-background").addClass("transparent");
+            $(".Page2 .image-background").addClass("transparent");
         },
         onZoneEnter: function () {
             console.log("you entered!");
-            $("#Page2 .image-background").removeClass("transparent");
+            $(".Page2 .image-background").removeClass("transparent");
         }
 
     });
