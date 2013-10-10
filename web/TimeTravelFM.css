@@ -1,0 +1,176 @@
+body {
+    background-color: #F8EAD6;
+    font-family: "Old Standard TT", serif;
+    height: 100%;
+    width: 100%;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+}
+h2, h1, h3, h4 {
+ color: #71634E;
+    text-align: justify;
+    text-transform: uppercase;
+    font-family: "Lato", sans-serif;
+    font-weight: 400;  
+    font-size: 2em;
+}
+.text {
+    font-size: 1.3em;
+    color:#71634E; 
+    letter-spacing: 0.08em;
+}
+nav {
+    height: 12vh;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    z-index: 10;
+    padding: 0px;
+    margin: 0px;
+    margin-left: -10px;
+    background-color: #BEA682;
+}
+nav img {
+    margin: 0px;
+    top: 0px;
+    width: 99%;
+    height: auto;
+}
+nav ul {
+ list-style: none; 
+    display: inline;
+    top: 0px;
+    width: 100%;
+    padding: 0;
+    padding-right: 5px;
+    margin: 0;
+    position: relative;
+    height: inherit;
+    float:right;
+    text-align: center;
+}
+nav li {
+    width: 20%;
+    float: left;
+    line-height: 80px;
+    text-transform: uppercase;
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+}
+nav a:hover {
+    text-decoration: none;
+    border-bottom: 3px solid #FF6633; 
+    color: rgb(50,50,50);
+}
+nav a.img:hover {
+    text-decoration: none;
+    border: none;
+}
+nav a:link {
+    text-decoration: none;
+    color: rgb(50,50,50);
+}
+nav a:visited{
+    text-decoration: none;
+    color: rgb(50,50,50);
+}
+
+.pg1-img1 {
+    border: 8px groove #BEA682;
+    border-radius: 3px;
+    height: 40vh;
+    width: auto;
+
+}
+.Page1 .container {
+    margin-top: 28vh;
+    height: 60vh;
+}
+.Page1 h2 {
+    display: block;
+    padding: 0px;
+}
+.Page1 .text {
+    padding: 0px;  
+}
+.Page1 p{
+    display: block;
+}
+.bottom-border {
+    width: 104%;
+    height: 12vh;
+    position: relative;
+    background-color: rgb(50,50,50);
+    padding: 0px;
+    bottom:0px;
+    margin-left:-3%;
+}
+.Page2 {
+    height: 100vh;
+    background:url(images/concert.jpg) center center no-repeat;
+    -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+    margin-left:-3%;
+}
+.Page2 .text {
+    text-align: left;
+}
+#Page2Text {
+    background-color: rgba(234,234,233,0.9);
+    width: 30%;
+    padding: 10px 30px 10px 30px;
+    top: 65px;
+    margin-left: 15%;
+    margin-right: 20%;
+    position: relative;
+    z-index: 2;
+}
+.Page3 {
+    height: 100vh;
+}
+.Page3 h1 {
+    margin-top: 20vh;
+}
+.Page3 h3 {
+    font-size: 1.1em;
+    padding-top: 0px;
+    margin-top: 0px;
+}
+#box5 {
+    display: inherit;
+   
+    width: inherit;
+    height: auto;
+}
+.Page4 {
+    height:100vh;
+}
+.Page4 .container{
+    height: 68vh;
+    padding-top: 20vh;
+}
+.Page4 h2{
+    display: block;
+    font-size: 1.5em;
+    margin-left: 10px;
+    margin-top: 0px;
+}
+.Page4 p {
+    display: block;
+    margin-left: 10px;
+   
+}
+#imageP4 {
+    width: inherit;
+    border: 8px groove #BEA682;
+    border-radius: 3px;
+}
+.Page5 {
+    height: 75vh; 
+}
+.Page5 h2 {
+    margin-top: 25vh;
+}
